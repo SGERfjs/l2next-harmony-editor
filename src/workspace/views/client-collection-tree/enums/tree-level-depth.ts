@@ -1,0 +1,6 @@
+export enum ETreeLevelDepth 
+{
+    CLIENT_ROOT_FOLDER = 1,
+    CLIENT_COLLECTIONS = 2,
+    CLIENT_FILES_AND_FOLDERS = 3
+}
