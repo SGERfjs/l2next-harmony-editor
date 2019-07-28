@@ -1,0 +1,132 @@
+{
+	"folders": [
+		{
+			"path": "lineage-client-h5"
+		},
+		{
+			"path": "lineage-client-freya"
+		}
+	],
+	"settings": {
+		"files.exclude": {
+			"*.dll": true
+		},
+		"lineage2dev.client.directories.required": [
+			{
+				"path": "system",
+				"enableFileValidation": true,
+				"files": ["L2.exe", "L2.bin", "l2.ini", "Engine.dll"]
+			},
+			{
+				"path": "MAPS",
+				"enableFileValidation": false,
+				"files": []
+			},
+			{
+				"path": "Textures",
+				"enableFileValidation": false,
+				"files": []
+			},
+			{
+				"path": "SysTextures",
+				"enableFileValidation": false,
+				"files": []
+			},
+			{
+				"path": "StaticMeshes",
+				"enableFileValidation": false,
+				"files": []
+			},
+			{
+				"path": "Animations",
+				"enableFileValidation": false,
+				"files": []
+			}
+		],
+		"lineage2dev.client.directories.collections": [
+			{
+				"friendlyName": "Datatables",
+				"description": "Tables containing various game related static data like armors, weapons, characters etc.",
+				"extensions": [".dat"],
+				"path": "system",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Configs",
+				"description": "Configuration files on how to launch the client, network settings, gfx settings etc.",
+				"extensions": [".ini"],
+				"path": "system",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Maps",
+				"description": "UE2 maps & levels",
+				"extensions": [".unr"],
+				"path": "MAPS",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Textures",
+				"description": "Textures for objects, maps & levels including arhitecture, foliage etc.",
+				"extensions": [".utx"],
+				"path": "Textures",
+				"enabled": true
+			},
+			{
+				"friendlyName": "System Textures",
+				"description": "Textures for objects, UI PC, NPC, monsters etc.",
+				"extensions": [".utx"],
+				"path": "SysTextures",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Static Meshes",
+				"description": "Meshes for object, towns, foliage, or any other non dynamic / movable object",
+				"extensions": [".usx"],
+				"path": "StaticMeshes",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Meshes / Animations",
+				"description": "Meshes and animations for them",
+				"extensions": [".ukx"],
+				"path": "Animations",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Sounds",
+				"description": "Ambient, skill, objects sounds",
+				"extensions": [".ogg", ".uax"],
+				"path": "Sounds",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Voices",
+				"description": "NPC, PC, monsters etc. sounds",
+				"extensions": [".ogg"],
+				"path": "Voice",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Music",
+				"description": "World, level, intro music",
+				"extensions": [".ogg", ".uax"],
+				"path": "Music",
+				"enabled": true
+			},
+			{
+				"friendlyName": "Verbiage",
+				"description": "Static hardcoded texts for dialogues etc.",
+				"extensions": [".htm"],
+				"path": "L2Text",
+				"enabled": true
+			}
+		]
+	},
+	"launch": {
+		"configurations": [
+			
+		],
+		"compounds": []
+	}
+}
