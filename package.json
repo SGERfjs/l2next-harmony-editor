@@ -14,6 +14,105 @@
 	],
 	"main": "./out/extension.js",
 	"contributes": {
+		"configuration": {
+			"title": "Lineage2Dev",
+			"properties": {
+				"lineage2dev.client.directories.required": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"title": "L2Client required directory",
+						"properties": {
+							"path": {
+								"type": "string",
+								"description": "A directory path relative to the root L2Client path"
+							},
+							"enableFileValidation": {
+								"type": "boolean",
+								"description": "Should enable optional file validation inside this directory"
+							},
+							"files": {
+								"type": "array",
+								"description": "Names & extensions of files to check in this folder",
+								"items": {
+									"type": "string",
+									"description": "Filename + extension ex. (L2.exe)"
+								}
+							}
+						},
+						"default": null
+					},
+					"markdownDescription": "A list of **required** folders used to detect & validate a Lineage2 game client in clients explorer"
+				},
+				"lineage2dev.client.directories.collections": {
+					"type": "array",
+					"items": {
+						"type": "object",
+						"title": "L2Client collection",
+						"properties": {
+							"friendlyName": {
+								"type": "string",
+								"description": "Friendly name used to display in the list of directories"
+							},
+							"description": {
+								"type": "string",
+								"description": "Description of the directory scope"
+							},
+							"extensions": {
+								"type": "array",
+								"items": {
+									"type": "string",
+									"title": "L2Client Directory",
+									"default": null
+								},
+								"description": "Extensions that will be included in filtering the files in this directory"
+							},
+							"path": {
+								"type": "string",
+								"description": "Case sensitive file system path of the directory"
+							},
+							"enabled": {
+								"type": "boolean",
+								"description": "Used to enable/disable filtering for the specific directory displayed in the tree view",
+								"default": "true"
+							}
+						}
+					},
+					"markdownDescription": "Default collection settings. Configure this at your will to be able to filter folders and files to your preference from the explorer"
+				}
+			}
+		},
+		"viewsContainers": {
+			"activitybar": [
+				{
+					"id": "l2-collection-tree",
+					"title": "Lineage2Dev",
+					"icon": "media/icons/logo.svg"
+				}
+			]
+		},
+		"views": {
+			"l2-collection-tree": [
+			  {
+				"id": "collection-tree",
+				"name": "Collection Explorer"
+			  }
+			]
+		},
+		"menus": {
+			"explorer/context": [
+				{
+					"command": "extension.launchGame",
+					"group": "l2client@1",
+					"when": "explorerResourceIsFolder && resource =~ '/system/'"
+				},
+				{
+					"command": "extension.launchDevmode",
+					"group": "l2client@2",
+					"when": "explorerResourceIsFolder && resource =~ '/system/'"
+				}
+			]
+		},
 		"commands": [
 			{
 				"command": "extension.launchGame",
@@ -23,21 +122,7 @@
 				"command": "extension.launchDevmode",
 				"title": "Launch L2: Devmode"
 			}
-		],
-		"menus": {
-			"explorer/context": [
-				{
-					"command": "extension.launchGame",
-					"group": "L2Client@1",
-					"when": "explorerResourceIsFolder && resource =~ '/system/'"
-				},
-				{
-					"command": "extension.launchDevmode",
-					"group": "L2Client@2",
-					"when": "explorerResourceIsFolder && resource =~ '/system/'"
-				}
-			]
-		}
+		]
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
