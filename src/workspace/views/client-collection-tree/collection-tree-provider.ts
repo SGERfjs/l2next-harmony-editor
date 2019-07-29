@@ -29,11 +29,8 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
 
     // Todo utils
 	isEmptyWorkspace(): Boolean {
-        if (this.workspaceRoot) {
-            return this.workspaceRoot.length == 0;
-        }
-
-        return true;
+		return (this.workspaceRoot as vscode.WorkspaceFolder[]) == undefined
+			&& (this.workspaceRoot as vscode.WorkspaceFolder[]).length == 0;
     }
     
     /**
@@ -71,7 +68,7 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
 
 	getChildren(element?: CollectionTreeNode | undefined): vscode.ProviderResult<CollectionTreeNode[]> {
 		if (this.isEmptyWorkspace()) {
-			vscode.window.showWarningMessage('Workspace is empty, Lineage2 clients are not found.');
+			vscode.window.showWarningMessage('Workspace is empty. No Lineage2 clients found.');
 			return Promise.resolve([]);
 		}
 	
