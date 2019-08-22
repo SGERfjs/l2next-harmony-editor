@@ -46,7 +46,7 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
 
             required.forEach(dir => {
                 const isValidDirectory = this.pathExists(path.join(clientFolder.uri.fsPath, dir.path));
-                const isValidFiles = dir.enableFileValidation && dir.files && dir.files.every(file => {
+                const isValidFiles = dir.enableFileValidation && dir.files && dir.files.every((file: string) => {
                     this.pathExists(path.join(clientFolder.uri.fsPath, dir.path, file))
                 });
 
@@ -166,15 +166,21 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
             }
 
             if (fs.lstatSync(path.join(element.resourceUri.fsPath, item)).isFile()) {
-
                 if (element.node.extensions && element.node.extensions.includes(path.extname(item))) {
+                    const command: vscode.Command = {
+                        title: 'Open tree item',
+                        command: 'extension.collectionTree.open',
+                        arguments: [{element, item}]
+                    };
+
                     const props: ICollectionDirectoryNode = {
                         label: item,
                         collapsibleState: vscode.TreeItemCollapsibleState.None,
                         uri: element.resourceUri.with({
                             path: path.join(element.resourceUri.fsPath, item)
                         }),
-                        depth: ETreeLevelDepth.CLIENT_FILES_AND_FOLDERS
+                        depth: ETreeLevelDepth.CLIENT_FILES_AND_FOLDERS,
+                        command: command
                     }
 
                     nodes.push(new CollectionTreeNode(props));

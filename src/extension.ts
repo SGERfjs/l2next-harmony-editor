@@ -3,6 +3,7 @@
 import * as vscode from 'vscode';
 import { CollectionTreeWnd } from './workspace/views/client-collection-tree/collection-tree';
 import { L2ClientLauncherWnd } from './workspace/views/client-launcher/l2client-launcher';
+import { JsonEditor } from './workspace/web-views/json-editor/json-editor';
 
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
@@ -14,6 +15,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// Register windows.
 	CollectionTreeWnd.register(context);
 	L2ClientLauncherWnd.register(context);
+
+	// Create and register webviews.
+	new JsonEditor().register(context);
+	
 }
 
 // this method is called when your extension is deactivated
