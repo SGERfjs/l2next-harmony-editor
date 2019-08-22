@@ -87,16 +87,16 @@
 				{
 					"id": "l2-collection-tree",
 					"title": "Lineage2Dev",
-					"icon": "media/icons/logo.svg"
+					"icon": "media/icons/logo.png"
 				}
 			]
 		},
 		"views": {
 			"l2-collection-tree": [
-			  {
-				"id": "collection-tree",
-				"name": "Collection Explorer"
-			  }
+				{
+					"id": "collection-tree",
+					"name": "Collection Explorer"
+				}
 			]
 		},
 		"menus": {
@@ -114,6 +114,10 @@
 			]
 		},
 		"commands": [
+			{
+				"command": "extension.collectionTree.open",
+				"title": "CollectionTree::open"
+			},
 			{
 				"command": "extension.launchGame",
 				"title": "Launch L2: Game"
@@ -141,5 +145,10 @@
 		"typescript": "^3.3.1",
 		"tslint": "^5.12.1",
 		"vscode-test": "^1.0.2"
+	},
+	"dependencies": {
+		"@json-editor/json-editor": "^1.4.0-beta.0",
+		"@types/json-editor": "0.0.5",
+		"react": "^16.9.0"
 	}
 }

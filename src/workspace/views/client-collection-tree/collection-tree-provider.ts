@@ -9,16 +9,15 @@ import { IClientDirectory } from './interfaces/client-directory';
 
 export class CollectionTreeProvider implements vscode.TreeDataProvider<CollectionTreeNode>
 {
-	private _onDidChangeTreeData: vscode.EventEmitter<CollectionTreeNode | undefined> = new vscode.EventEmitter<CollectionTreeNode | undefined>();
-	readonly onDidChangeTreeData: vscode.Event<CollectionTreeNode | undefined> = this._onDidChangeTreeData.event;
+    private _onDidChangeTreeData: vscode.EventEmitter<CollectionTreeNode | undefined> = new vscode.EventEmitter<CollectionTreeNode | undefined>();
+    readonly onDidChangeTreeData: vscode.Event<CollectionTreeNode | undefined> = this._onDidChangeTreeData.event;
 
-    getFormattedExtensions(array: string[]): string
-    {
+    getFormattedExtensions(array: string[]): string {
         let formatted = '';
 
         if (array.length > 1) {
             array.forEach((ext, index) => {
-                 formatted += index == (array.length - 1) ? ext :`${ext} | `;
+                formatted += index == (array.length - 1) ? ext : `${ext} | `;
             });
         } else {
             formatted = array.toString();
@@ -28,25 +27,26 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
     }
 
     // Todo utils
-	isEmptyWorkspace(): Boolean {
-		return (this.workspaceRoot as vscode.WorkspaceFolder[]) == undefined
-			&& (this.workspaceRoot as vscode.WorkspaceFolder[]).length == 0;
+    isEmptyWorkspace(): Boolean {
+        if (this.workspaceRoot) {
+            return this.workspaceRoot.length == 0;
+        }
+
+        return true;
     }
-    
+
     /**
      * TODO Implement checksum validation and schema validation support later.
      */
-    isValidL2Client(clientFolder: vscode.WorkspaceFolder): Boolean
-    {
+    isValidL2Client(clientFolder: vscode.WorkspaceFolder): Boolean {
         let required = vscode.workspace.getConfiguration('lineage2dev.client.directories').get<IClientDirectory[]>('required');
 
-        if (required && required.length > 0)
-        {
+        if (required && required.length > 0) {
             let isValid = false;
 
             required.forEach(dir => {
                 const isValidDirectory = this.pathExists(path.join(clientFolder.uri.fsPath, dir.path));
-                const isValidFiles = dir.enableFileValidation && dir.files && dir.files.every(file => {
+                const isValidFiles = dir.enableFileValidation && dir.files && dir.files.every((file: string) => {
                     this.pathExists(path.join(clientFolder.uri.fsPath, dir.path, file))
                 });
 
@@ -58,21 +58,21 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
         return false;
     }
 
-	refresh(): void {
-		this._onDidChangeTreeData.fire();
-	}
-	
-	getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
-		return element;
-	}
+    refresh(): void {
+        this._onDidChangeTreeData.fire();
+    }
 
-	getChildren(element?: CollectionTreeNode | undefined): vscode.ProviderResult<CollectionTreeNode[]> {
-		if (this.isEmptyWorkspace()) {
-			vscode.window.showWarningMessage('Workspace is empty. No Lineage2 clients found.');
-			return Promise.resolve([]);
-		}
-	
-        const nodes:CollectionTreeNode[] = [];
+    getTreeItem(element: vscode.TreeItem): vscode.TreeItem | Thenable<vscode.TreeItem> {
+        return element;
+    }
+
+    getChildren(element?: CollectionTreeNode | undefined): vscode.ProviderResult<CollectionTreeNode[]> {
+        if (this.isEmptyWorkspace()) {
+            vscode.window.showWarningMessage('Workspace is empty, Lineage2 clients are not found.');
+            return Promise.resolve([]);
+        }
+
+        const nodes: CollectionTreeNode[] = [];
 
         if (!element) {
             // First level.
@@ -89,14 +89,12 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
 
         }
 
-		return nodes;
+        return nodes;
     }
-    
-    private addClientRoot(nodes: CollectionTreeNode[], element?: CollectionTreeNode | undefined)
-    {
-        if(!this.workspaceRoot)
-        {
-           return;
+
+    private addClientRoot(nodes: CollectionTreeNode[], element?: CollectionTreeNode | undefined) {
+        if (!this.workspaceRoot) {
+            return;
         }
 
         this.workspaceRoot.forEach(dir => {
@@ -109,7 +107,7 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
 
                 return vscode.window.showWarningMessage(message)
             }
-           
+
             const props: ICollectionDirectoryNode = {
                 label: dir.name,
                 collapsibleState: vscode.TreeItemCollapsibleState.Collapsed,
@@ -122,8 +120,7 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
         });
     }
 
-    private addClientFolders(nodes: CollectionTreeNode[], element?: CollectionTreeNode | undefined)
-    {
+    private addClientFolders(nodes: CollectionTreeNode[], element?: CollectionTreeNode | undefined) {
         if (!element) {
             return;
         }
@@ -149,8 +146,7 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
         }
     }
 
-    private addClientFiles(nodes: CollectionTreeNode[], element?: CollectionTreeNode | undefined)
-    {
+    private addClientFiles(nodes: CollectionTreeNode[], element?: CollectionTreeNode | undefined) {
         if (!element) {
             return;
         }
@@ -170,34 +166,39 @@ export class CollectionTreeProvider implements vscode.TreeDataProvider<Collectio
             }
 
             if (fs.lstatSync(path.join(element.resourceUri.fsPath, item)).isFile()) {
+                if (element.node.extensions && element.node.extensions.includes(path.extname(item))) {
+                    const command: vscode.Command = {
+                        title: 'Open tree item',
+                        command: 'extension.collectionTree.open',
+                        arguments: [{element, item}]
+                    };
 
-                if (element.node.extensions && element.node.extensions.includes(path.extname(item)))
-                {
                     const props: ICollectionDirectoryNode = {
                         label: item,
                         collapsibleState: vscode.TreeItemCollapsibleState.None,
                         uri: element.resourceUri.with({
                             path: path.join(element.resourceUri.fsPath, item)
                         }),
-                        depth: ETreeLevelDepth.CLIENT_FILES_AND_FOLDERS
+                        depth: ETreeLevelDepth.CLIENT_FILES_AND_FOLDERS,
+                        command: command
                     }
-    
+
                     nodes.push(new CollectionTreeNode(props));
                 }
             }
         });
     }
 
-	private pathExists(p: string): boolean {
-		try {
-			fs.accessSync(p);
-		} catch (err) {
-			return false;
-		}
+    private pathExists(p: string): boolean {
+        try {
+            fs.accessSync(p);
+        } catch (err) {
+            return false;
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	constructor(private workspaceRoot: vscode.WorkspaceFolder[] | undefined) {
-	}
+    constructor(private workspaceRoot: vscode.WorkspaceFolder[] | undefined) {
+    }
 }

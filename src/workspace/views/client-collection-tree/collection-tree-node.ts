@@ -8,11 +8,10 @@ export class CollectionTreeNode extends vscode.TreeItem {
 	}
 
 	get tooltip(): string {
-		if (!this.node.tooltip)
-		{
+		if (!this.node.tooltip) {
 			return '';
 		}
-		
+
 		return `${this.label}-${this.node.tooltip}`;
 	}
 
@@ -22,21 +21,23 @@ export class CollectionTreeNode extends vscode.TreeItem {
 
 	get description(): string {
 
-		if (!this.node.description)
-		{
+		if (!this.node.description) {
 			return '';
 		}
 
 		return this.node.description;
 	}
 
-	get iconPath()
-	{
+	get iconPath() {
 		if (!this.node.icon) {
 			return false;
 		}
 
 		return this.node.icon;
+	}
+
+	get command() {
+		return this.node.command;
 	}
 
 	contextValue = 'l2clientTreeNode';
