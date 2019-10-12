@@ -1,6 +1,3 @@
-Notice. Development is freezed due to https://github.com/cmake-js/cmake-js/issues/188
-
-
 # lineage2dev README
 
 This is the README for your extension "lineage2dev". After writing up a brief description, we recommend including the following sections.
